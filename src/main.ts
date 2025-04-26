@@ -6,7 +6,7 @@ import App from "./App.vue";
 // 全局样式
 import "./style.css";
 import "animate.css";
-
+import './tailwind.css'
 // 路由配置
 import routes from "./router";
 

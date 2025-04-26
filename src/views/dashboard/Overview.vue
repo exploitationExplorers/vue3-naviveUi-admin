@@ -277,8 +277,8 @@ onMounted(() => {
 
 <template>
   <div :class="{ 'dark-theme': appStore.darkMode }">
-    <!-- 统计卡片 -->
-    <n-grid cols="1 s:2 m:4" :x-gap="12" :y-gap="12">
+    
+    <!-- <n-grid cols="1 s:2 m:4" :x-gap="12" :y-gap="12">
       <n-grid-item>
         <n-card class="stat-card" size="small">
           <div class="stat-content">
@@ -342,7 +342,72 @@ onMounted(() => {
           </div>
         </n-card>
       </n-grid-item>
-    </n-grid>
+    </n-grid> -->
+    <div class="flex flex-row space-x-4">
+      <div class="flex-1">
+        <n-card class="stat-card" size="small">
+          <div class="stat-content">
+            <div class="stat-icon user-icon">
+              <n-icon size="24">
+                <user-outlined />
+              </n-icon>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value" ref="totalUsersRef">0</div>
+              <div class="stat-label">注册用户</div>
+            </div>
+          </div>
+        </n-card>
+      </div>
+
+      <div class="flex-1">
+        <n-card class="stat-card" size="small">
+          <div class="stat-content">
+            <div class="stat-icon active-icon">
+              <n-icon size="24">
+                <heart-outlined />
+              </n-icon>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value" ref="activeUsersRef">0</div>
+              <div class="stat-label">活跃用户</div>
+            </div>
+          </div>
+        </n-card>
+      </div>
+
+      <div class="flex-1">
+        <n-card class="stat-card" size="small">
+          <div class="stat-content">
+            <div class="stat-icon post-icon">
+              <n-icon size="24">
+                <comment-outlined />
+              </n-icon>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value" ref="newPostsRef">0</div>
+              <div class="stat-label">新增帖子</div>
+            </div>
+          </div>
+        </n-card>
+      </div>
+
+      <div class="flex-1">
+        <n-card class="stat-card" size="small">
+          <div class="stat-content">
+            <div class="stat-icon activity-icon">
+              <n-icon size="24">
+                <calendar-outlined />
+              </n-icon>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value" ref="pendingActivitiesRef">0</div>
+              <div class="stat-label">待审核活动</div>
+            </div>
+          </div>
+        </n-card>
+      </div>
+    </div>
 
     <n-divider />
 
