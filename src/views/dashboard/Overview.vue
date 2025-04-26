@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, h } from "vue";
+import { ref, onMounted, h, reactive } from "vue";
 import {
   NGrid,
   NGridItem,
@@ -26,12 +26,37 @@ import gsap from "gsap";
 const appStore = useAppStore();
 
 // 统计数据
-const statistics = ref({
-  totalUsers: 1258,
-  activeUsers: 865,
-  newPosts: 152,
-  pendingActivities: 38
-});
+
+const statisticsCards = reactive([
+  {
+    id: 'totalUsers',
+    value: 1258,
+    label: '注册用户',
+    icon: UserOutlined,
+    iconClass: 'user-icon'
+  },
+  {
+    id: 'activeUsers',
+    value: 865,
+    label: '活跃用户',
+    icon: HeartOutlined,
+    iconClass: 'active-icon'
+  },
+  {
+    id: 'newPosts',
+    value: 152,
+    label: '新增帖子',
+    icon: CommentOutlined,
+    iconClass: 'post-icon'
+  },
+  {
+    id: 'pendingActivities',
+    value: 38,
+    label: '待审核活动',
+    icon: CalendarOutlined,
+    iconClass: 'activity-icon'
+  }
+]);
 
 // 活动列表数据
 const activities = ref([
@@ -143,7 +168,7 @@ const activityColumns = [
       return h(NProgress, {
         percentage,
         indicatorPlacement: "inside",
-        status: percentage >= 100 ? "success" : "processing",
+        status: percentage >= 100 ? "success" : "info",
         showIndicator: true,
         height: 15
       });
@@ -221,33 +246,27 @@ const timeOptions = [
 ];
 
 // 动画处理
-const countUp = (target: number, elementRef: any) => {
+const countUp = (target: number, elementId: string) => {
   const obj = { val: 0 };
   gsap.to(obj, {
     val: target,
     duration: 1.5,
     ease: "power1.out",
     onUpdate: function() {
-      if (elementRef.value) {
-        elementRef.value.innerHTML = Math.floor(obj.val);
+      const element = document.getElementById(elementId);
+      if (element) {
+        element.innerHTML = Math.floor(obj.val).toString();
       }
     }
   });
 };
 
-// 统计数字refs
-const totalUsersRef = ref(null);
-const activeUsersRef = ref(null);
-const newPostsRef = ref(null);
-const pendingActivitiesRef = ref(null);
-
 // 在组件挂载时添加动画
 onMounted(() => {
   // 数字动画
-  countUp(statistics.value.totalUsers, totalUsersRef);
-  countUp(statistics.value.activeUsers, activeUsersRef);
-  countUp(statistics.value.newPosts, newPostsRef);
-  countUp(statistics.value.pendingActivities, pendingActivitiesRef);
+  statisticsCards.forEach(card => {
+    countUp(card.value, `stat-value-${card.id}`);
+  });
 
   // 卡片动画
   const cards = document.querySelectorAll('.stat-card');
@@ -277,132 +296,18 @@ onMounted(() => {
 
 <template>
   <div :class="{ 'dark-theme': appStore.darkMode }">
-    
-    <!-- <n-grid cols="1 s:2 m:4" :x-gap="12" :y-gap="12">
-      <n-grid-item>
-        <n-card class="stat-card" size="small">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div v-for="card in statisticsCards" :key="card.id" class="w-full">
+        <n-card class="stat-card w-full min-w-[200px]" size="small">
           <div class="stat-content">
-            <div class="stat-icon user-icon">
+            <div class="stat-icon" :class="card.iconClass">
               <n-icon size="24">
-                <user-outlined />
+                <component :is="card.icon" />
               </n-icon>
             </div>
             <div class="stat-info">
-              <div class="stat-value" ref="totalUsersRef">0</div>
-              <div class="stat-label">注册用户</div>
-            </div>
-          </div>
-        </n-card>
-      </n-grid-item>
-
-      <n-grid-item>
-        <n-card class="stat-card" size="small">
-          <div class="stat-content">
-            <div class="stat-icon active-icon">
-              <n-icon size="24">
-                <heart-outlined />
-              </n-icon>
-            </div>
-            <div class="stat-info">
-              <div class="stat-value" ref="activeUsersRef">0</div>
-              <div class="stat-label">活跃用户</div>
-            </div>
-          </div>
-        </n-card>
-      </n-grid-item>
-
-      <n-grid-item>
-        <n-card class="stat-card" size="small">
-          <div class="stat-content">
-            <div class="stat-icon post-icon">
-              <n-icon size="24">
-                <comment-outlined />
-              </n-icon>
-            </div>
-            <div class="stat-info">
-              <div class="stat-value" ref="newPostsRef">0</div>
-              <div class="stat-label">新增帖子</div>
-            </div>
-          </div>
-        </n-card>
-      </n-grid-item>
-
-      <n-grid-item>
-        <n-card class="stat-card" size="small">
-          <div class="stat-content">
-            <div class="stat-icon activity-icon">
-              <n-icon size="24">
-                <calendar-outlined />
-              </n-icon>
-            </div>
-            <div class="stat-info">
-              <div class="stat-value" ref="pendingActivitiesRef">0</div>
-              <div class="stat-label">待审核活动</div>
-            </div>
-          </div>
-        </n-card>
-      </n-grid-item>
-    </n-grid> -->
-    <div class="flex flex-row space-x-4">
-      <div class="flex-1">
-        <n-card class="stat-card" size="small">
-          <div class="stat-content">
-            <div class="stat-icon user-icon">
-              <n-icon size="24">
-                <user-outlined />
-              </n-icon>
-            </div>
-            <div class="stat-info">
-              <div class="stat-value" ref="totalUsersRef">0</div>
-              <div class="stat-label">注册用户</div>
-            </div>
-          </div>
-        </n-card>
-      </div>
-
-      <div class="flex-1">
-        <n-card class="stat-card" size="small">
-          <div class="stat-content">
-            <div class="stat-icon active-icon">
-              <n-icon size="24">
-                <heart-outlined />
-              </n-icon>
-            </div>
-            <div class="stat-info">
-              <div class="stat-value" ref="activeUsersRef">0</div>
-              <div class="stat-label">活跃用户</div>
-            </div>
-          </div>
-        </n-card>
-      </div>
-
-      <div class="flex-1">
-        <n-card class="stat-card" size="small">
-          <div class="stat-content">
-            <div class="stat-icon post-icon">
-              <n-icon size="24">
-                <comment-outlined />
-              </n-icon>
-            </div>
-            <div class="stat-info">
-              <div class="stat-value" ref="newPostsRef">0</div>
-              <div class="stat-label">新增帖子</div>
-            </div>
-          </div>
-        </n-card>
-      </div>
-
-      <div class="flex-1">
-        <n-card class="stat-card" size="small">
-          <div class="stat-content">
-            <div class="stat-icon activity-icon">
-              <n-icon size="24">
-                <calendar-outlined />
-              </n-icon>
-            </div>
-            <div class="stat-info">
-              <div class="stat-value" ref="pendingActivitiesRef">0</div>
-              <div class="stat-label">待审核活动</div>
+              <div class="stat-value" :id="`stat-value-${card.id}`">0</div>
+              <div class="stat-label">{{ card.label }}</div>
             </div>
           </div>
         </n-card>
@@ -448,6 +353,8 @@ onMounted(() => {
 .stat-card {
   background-color: var(--card-bg);
   transition: all 0.3s ease;
+  min-height: 100px;
+  width: 100%;
 }
 
 .stat-card:hover {
