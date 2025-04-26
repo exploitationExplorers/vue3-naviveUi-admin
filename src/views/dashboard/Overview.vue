@@ -246,39 +246,11 @@ const timeOptions = [
 ];
 
 // 动画处理
-const countUp = (target: number, elementId: string) => {
-  const obj = { val: 0 };
-  gsap.to(obj, {
-    val: target,
-    duration: 1.5,
-    ease: "power1.out",
-    onUpdate: function() {
-      const element = document.getElementById(elementId);
-      if (element) {
-        element.innerHTML = Math.floor(obj.val).toString();
-      }
-    }
-  });
-};
+
 
 // 在组件挂载时添加动画
 onMounted(() => {
-  // 数字动画
-  statisticsCards.forEach(card => {
-    countUp(card.value, `stat-value-${card.id}`);
-  });
-
-  // 卡片动画
-  const cards = document.querySelectorAll('.stat-card');
-  cards.forEach((card, index) => {
-    gsap.from(card, {
-      duration: 0.5,
-      y: 20,
-      opacity: 0,
-      delay: 0.1 * index,
-      ease: "power1.out"
-    });
-  });
+ 
 
   // 表格动画
   const tables = document.querySelectorAll('.data-table-card');
@@ -295,7 +267,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div :class="{ 'dark-theme': appStore.darkMode }">
+  <div >
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       <div v-for="card in statisticsCards" :key="card.id" class="w-full">
         <n-card class="stat-card w-full min-w-[200px]" size="small">
